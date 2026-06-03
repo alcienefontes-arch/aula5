@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eventos de Junho de 2026</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      max-height: 420px;
+      overflow: hidden;
+    }
+
+    .hero img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(15,52,96,0.85));
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3.5rem);
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      background: linear-gradient(90deg, #ffd700, #ff6b6b, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      padding: 0 20px;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 800;
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      border-radius: 2px;
+      margin: 10px auto 0;
+    }
+
+    .section-title.events-title::after {
+      background: linear-gradient(90deg, #ffd700, #ff6b6b);
+    }
+
+    .section-title.cal-title::after {
+      background: linear-gradient(90deg, #34d399, #60a5fa);
+    }
+
+    /* ── CARDS GRID ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 72px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 4px;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Card accent colors */
+    .card.yellow::before  { background: linear-gradient(90deg, #ffd700, #ffa500); }
+    .card.green::before   { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .card.blue::before    { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+    .card.pink::before    { background: linear-gradient(90deg, #ec4899, #db2777); }
+    .card.orange::before  { background: linear-gradient(90deg, #f97316, #ea580c); }
+    .card.cyan::before    { background: linear-gradient(90deg, #06b6d4, #0891b2); }
+    .card.indigo::before  { background: linear-gradient(90deg, #6366f1, #4338ca); }
+    .card.rainbow::before { background: linear-gradient(90deg, #f43f5e, #f97316, #facc15, #22c55e, #3b82f6, #a855f7); }
+
+    .card-date {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .card-emoji {
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+
+    .card-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      opacity: 0.75;
+      line-height: 1.5;
+    }
+
+    /* ── CALENDAR ── */
+    .calendar-wrapper {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px 24px;
+    }
+
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      margin-bottom: 8px;
+      gap: 4px;
+    }
+
+    .calendar-header span {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.5;
+      padding: 6px 0;
+    }
+
+    .calendar-header span:first-child { color: #f87171; }
+    .calendar-header span:last-child  { color: #60a5fa; }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(0.7rem, 1.8vw, 0.95rem);
+      font-weight: 600;
+      background: rgba(255,255,255,0.04);
+      position: relative;
+      cursor: default;
+      transition: transform 0.2s;
+      min-height: 52px;
+      padding: 4px 2px;
+    }
+
+    .day:hover {
+      transform: scale(1.08);
+      z-index: 2;
+    }
+
+    .day.empty {
+      background: transparent;
+    }
+
+    .day.sunday { color: #f87171; }
+    .day.saturday { color: #60a5fa; }
+
+    .day.event {
+      border: 2px solid rgba(255,255,255,0.25);
+      color: #fff;
+    }
+
+    /* Event day color themes */
+    .day.ev-yellow  { background: rgba(255,215,0,0.18);   border-color: #ffd700; }
+    .day.ev-green   { background: rgba(34,197,94,0.18);   border-color: #22c55e; }
+    .day.ev-blue    { background: rgba(59,130,246,0.18);  border-color: #3b82f6; }
+    .day.ev-pink    { background: rgba(236,72,153,0.18);  border-color: #ec4899; }
+    .day.ev-orange  { background: rgba(249,115,22,0.18);  border-color: #f97316; }
+    .day.ev-cyan    { background: rgba(6,182,212,0.18);   border-color: #06b6d4; }
+    .day.ev-indigo  { background: rgba(99,102,241,0.18);  border-color: #6366f1; }
+    .day.ev-rainbow { background: linear-gradient(135deg, rgba(244,63,94,0.2), rgba(168,85,247,0.2)); border-color: #a855f7; }
+
+    .day-num {
+      font-size: clamp(0.85rem, 2vw, 1.05rem);
+      font-weight: 700;
+    }
+
+    .day-emoji {
+      font-size: clamp(0.75rem, 1.8vw, 1rem);
+      line-height: 1.2;
+    }
+
+    .day-label {
+      font-size: clamp(0.42rem, 1.1vw, 0.58rem);
+      text-align: center;
+      line-height: 1.2;
+      opacity: 0.85;
+      padding: 0 1px;
+      word-break: break-word;
+    }
+
+    /* ── TOOLTIP (CSS only) ── */
+    .day[data-tip] {
+      position: relative;
+    }
+
+    .day[data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,40,0.95);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 10;
+      color: #fff;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      margin-top: 28px;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      font-size: 0.8rem;
+      opacity: 0.4;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .calendar-wrapper { padding: 16px 8px; }
+      .day { min-height: 44px; border-radius: 6px; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <header class="hero">
+    <img src="eventos-junho-2026.png" alt="Eventos de Junho de 2026" />
+    <div class="hero-overlay">
+      <h1>Eventos de Junho de 2026</h1>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ── CARDS ── -->
+    <h2 class="section-title events-title">📅 Eventos do Mês</h2>
+
+    <div class="cards-grid">
+
+      <div class="card yellow">
+        <span class="card-date">04 de junho</span>
+        <span class="card-emoji">✝️</span>
+        <span class="card-name">Corpus Christi</span>
+        <p class="card-desc">Ponto facultativo nacional. Data religiosa celebrada 60 dias após a Páscoa.</p>
+      </div>
+
+      <div class="card green">
+        <span class="card-date">05 de junho</span>
+        <span class="card-emoji">🌱</span>
+        <span class="card-name">Dia Mundial do Meio Ambiente</span>
+        <p class="card-desc">Início da Semana Nacional do Meio Ambiente. Conscientização ambiental global.</p>
+      </div>
+
+      <div class="card blue">
+        <span class="card-date">11 de junho</span>
+        <span class="card-emoji">⚽</span>
+        <span class="card-name">Início da Copa do Mundo 2026</span>
+        <p class="card-desc">Abertura oficial do torneio. Estados Unidos, Canadá e México recebem o mundo.</p>
+      </div>
+
+      <div class="card pink">
+        <span class="card-date">12 de junho</span>
+        <span class="card-emoji">❤️</span>
+        <span class="card-name">Dia dos Namorados</span>
+        <p class="card-desc">Data comemorativa no Brasil. Celebre o amor com quem você ama!</p>
+      </div>
+
+      <div class="card orange">
+        <span class="card-date">13 de junho</span>
+        <span class="card-emoji">🎉</span>
+        <span class="card-name">Dia de Santo Antônio</span>
+        <p class="card-desc">Início das festas juninas e jogo Brasil x Marrocos na Copa do Mundo 2026.</p>
+      </div>
+
+      <div class="card cyan">
+        <span class="card-date">21 de junho</span>
+        <span class="card-emoji">❄️</span>
+        <span class="card-name">Início do Inverno</span>
+        <p class="card-desc">Solstício de Inverno às 05h24. O dia mais curto do ano no hemisfério sul.</p>
+      </div>
+
+      <div class="card indigo">
+        <span class="card-date">24 de junho</span>
+        <span class="card-emoji">🎆</span>
+        <span class="card-name">Dia de São João</span>
+        <p class="card-desc">Auge das celebrações juninas: forró, quadrilha, comidas típicas e fogueiras.</p>
+      </div>
+
+      <div class="card rainbow">
+        <span class="card-date">28 de junho</span>
+        <span class="card-emoji">🏳️‍🌈</span>
+        <span class="card-name">Dia do Orgulho LGBTQIA+</span>
+        <p class="card-desc">Data de luta, visibilidade e celebração. Amor é amor — sempre.</p>
+      </div>
+
+    </div>
+
+    <!-- ── CALENDAR ── -->
+    <h2 class="section-title cal-title">🗓️ Calendário de Junho 2026</h2>
+
+    <div class="calendar-wrapper">
+      <div class="calendar-header">
+        <span>Dom</span>
+        <span>Seg</span>
+        <span>Ter</span>
+        <span>Qua</span>
+        <span>Qui</span>
+        <span>Sex</span>
+        <span>Sáb</span>
+      </div>
+
+      <div class="calendar-grid">
+
+        <!-- Junho 2026 começa na segunda-feira (col 2) -->
+        <div class="day empty"></div>
+
+        <!-- 1 seg -->
+        <div class="day">
+          <span class="day-num">1</span>
+        </div>
+        <!-- 2 ter -->
+        <div class="day">
+          <span class="day-num">2</span>
+        </div>
+        <!-- 3 qua -->
+        <div class="day">
+          <span class="day-num">3</span>
+        </div>
+        <!-- 4 qui — Corpus Christi -->
+        <div class="day event ev-yellow" data-tip="Corpus Christi — Ponto facultativo">
+          <span class="day-num">4</span>
+          <span class="day-emoji">✝️</span>
+          <span class="day-label">Corpus Christi</span>
+        </div>
+        <!-- 5 sex — Meio Ambiente -->
+        <div class="day event ev-green" data-tip="Dia Mundial do Meio Ambiente">
+          <span class="day-num">5</span>
+          <span class="day-emoji">🌱</span>
+          <span class="day-label">Meio Ambiente</span>
+        </div>
+        <!-- 6 sáb -->
+        <div class="day saturday">
+          <span class="day-num">6</span>
+        </div>
+
+        <!-- 7 dom -->
+        <div class="day sunday">
+          <span class="day-num">7</span>
+        </div>
+        <!-- 8 seg -->
+        <div class="day">
+          <span class="day-num">8</span>
+        </div>
+        <!-- 9 ter -->
+        <div class="day">
+          <span class="day-num">9</span>
+        </div>
+        <!-- 10 qua -->
+        <div class="day">
+          <span class="day-num">10</span>
+        </div>
+        <!-- 11 qui — Copa -->
+        <div class="day event ev-blue" data-tip="Início da Copa do Mundo 2026">
+          <span class="day-num">11</span>
+          <span class="day-emoji">⚽</span>
+          <span class="day-label">Copa 2026</span>
+        </div>
+        <!-- 12 sex — Namorados -->
+        <div class="day event ev-pink" data-tip="Dia dos Namorados">
+          <span class="day-num">12</span>
+          <span class="day-emoji">❤️</span>
+          <span class="day-label">Namorados</span>
+        </div>
+        <!-- 13 sáb — Santo Antônio -->
+        <div class="day event ev-orange saturday" data-tip="Dia de Santo Antônio — Festas Juninas">
+          <span class="day-num">13</span>
+          <span class="day-emoji">🎉</span>
+          <span class="day-label">Sto. Antônio</span>
+        </div>
+
+        <!-- 14 dom -->
+        <div class="day sunday">
+          <span class="day-num">14</span>
+        </div>
+        <!-- 15 seg -->
+        <div class="day">
+          <span class="day-num">15</span>
+        </div>
+        <!-- 16 ter -->
+        <div class="day">
+          <span class="day-num">16</span>
+        </div>
+        <!-- 17 qua -->
+        <div class="day">
+          <span class="day-num">17</span>
+        </div>
+        <!-- 18 qui -->
+        <div class="day">
+          <span class="day-num">18</span>
+        </div>
+        <!-- 19 sex -->
+        <div class="day">
+          <span class="day-num">19</span>
+        </div>
+        <!-- 20 sáb -->
+        <div class="day saturday">
+          <span class="day-num">20</span>
+        </div>
+
+        <!-- 21 dom — Inverno -->
+        <div class="day event ev-cyan sunday" data-tip="Início do Inverno — Solstício às 05h24">
+          <span class="day-num">21</span>
+          <span class="day-emoji">❄️</span>
+          <span class="day-label">Inverno</span>
+        </div>
+        <!-- 22 seg -->
+        <div class="day">
+          <span class="day-num">22</span>
+        </div>
+        <!-- 23 ter -->
+        <div class="day">
+          <span class="day-num">23</span>
+        </div>
+        <!-- 24 qua — São João -->
+        <div class="day event ev-indigo" data-tip="Dia de São João — Festas Juninas">
+          <span class="day-num">24</span>
+          <span class="day-emoji">🎆</span>
+          <span class="day-label">São João</span>
+        </div>
+        <!-- 25 qui -->
+        <div class="day">
+          <span class="day-num">25</span>
+        </div>
+        <!-- 26 sex -->
+        <div class="day">
+          <span class="day-num">26</span>
+        </div>
+        <!-- 27 sáb -->
+        <div class="day saturday">
+          <span class="day-num">27</span>
+        </div>
+
+        <!-- 28 dom — LGBTQIA+ -->
+        <div class="day event ev-rainbow sunday" data-tip="Dia do Orgulho LGBTQIA+">
+          <span class="day-num">28</span>
+          <span class="day-emoji">🏳️‍🌈</span>
+          <span class="day-label">Orgulho</span>
+        </div>
+        <!-- 29 seg -->
+        <div class="day">
+          <span class="day-num">29</span>
+        </div>
+        <!-- 30 ter -->
+        <div class="day">
+          <span class="day-num">30</span>
+        </div>
+
+        <!-- Preencher restante da última semana -->
+        <div class="day empty"></div>
+        <div class="day empty"></div>
+        <div class="day empty"></div>
+        <div class="day empty"></div>
+
+      </div>
+
+      <!-- Legenda -->
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ffd700;"></div>
+          <span>Corpus Christi</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#22c55e;"></div>
+          <span>Meio Ambiente</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#3b82f6;"></div>
+          <span>Copa do Mundo</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ec4899;"></div>
+          <span>Dia dos Namorados</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#f97316;"></div>
+          <span>Santo Antônio / Festas Juninas</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#06b6d4;"></div>
+          <span>Início do Inverno</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#6366f1;"></div>
+          <span>Dia de São João</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#a855f7;"></div>
+          <span>Orgulho LGBTQIA+</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Eventos de Junho de 2026 · Feito com ❤️ para o GitHub Pages</p>
+  </footer>
+
+</body>
+</html>
