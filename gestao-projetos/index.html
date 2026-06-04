@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestão de Projetos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       TOKENS & RESET
+    ============================================================ */
+    :root {
+      --roxo-900: #1e0a3c;
+      --roxo-800: #2d1257;
+      --roxo-700: #3d1a72;
+      --roxo-600: #5a2da6;
+      --roxo-500: #7c3aed;
+      --roxo-400: #9b5fff;
+      --roxo-300: #c4a3ff;
+      --roxo-100: #f0e8ff;
+      --roxo-50:  #f9f5ff;
+
+      --verde-600: #059669;
+      --verde-500: #10b981;
+      --verde-400: #34d399;
+      --verde-100: #d1fae5;
+      --verde-50:  #ecfdf5;
+
+      --cinza-900: #0f0f13;
+      --cinza-800: #1a1a24;
+      --cinza-700: #2a2a3a;
+      --cinza-600: #3d3d52;
+      --cinza-400: #7a7a9a;
+      --cinza-300: #a8a8c0;
+      --cinza-200: #d4d4e8;
+      --cinza-100: #ededf5;
+      --cinza-50:  #f7f7fc;
+
+      --amarelo: #f59e0b;
+      --laranja: #f97316;
+      --vermelho: #ef4444;
+      --azul: #3b82f6;
+
+      --bg: #f4f3fa;
+      --surface: #ffffff;
+      --surface-2: #f9f8fd;
+      --border: #e4e2f0;
+      --text: #1a1a2e;
+      --text-muted: #6b6b8a;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+
+      --shadow-sm: 0 1px 3px rgba(90,45,166,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 16px rgba(90,45,166,.10), 0 2px 6px rgba(0,0,0,.05);
+      --shadow-lg: 0 12px 40px rgba(90,45,166,.14), 0 4px 12px rgba(0,0,0,.06);
+      --shadow-roxo: 0 4px 20px rgba(124,58,237,.25);
+
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .header {
+      background: var(--roxo-800);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 60% -10%, rgba(124,58,237,.35) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 10% 110%, rgba(16,185,129,.15) 0%, transparent 55%);
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--roxo-400), var(--verde-500));
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -.3px;
+    }
+
+    .logo-badge {
+      font-size: 10px;
+      font-weight: 600;
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.7);
+      padding: 2px 7px;
+      border-radius: 100px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-sync {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.15);
+      color: rgba(255,255,255,.85);
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: var(--font-body);
+    }
+
+    .btn-sync:hover {
+      background: rgba(255,255,255,.18);
+      color: #fff;
+    }
+
+    .btn-sync.loading .sync-icon { animation: spin .8s linear infinite; }
+
+    .btn-novo {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, var(--roxo-500), var(--roxo-400));
+      border: none;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: var(--font-body);
+      box-shadow: var(--shadow-roxo);
+    }
+
+    .btn-novo:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(124,58,237,.35); }
+    .btn-novo:active { transform: translateY(0); }
+
+    /* ============================================================
+       LAYOUT PRINCIPAL
+    ============================================================ */
+    .main {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* ============================================================
+       INDICADORES
+    ============================================================ */
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .2s, box-shadow .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .card-total::before    { background: linear-gradient(90deg, var(--roxo-500), var(--roxo-400)); }
+    .card-andamento::before{ background: linear-gradient(90deg, var(--azul), #60a5fa); }
+    .card-concluido::before{ background: linear-gradient(90deg, var(--verde-500), var(--verde-400)); }
+    .card-atrasado::before { background: linear-gradient(90deg, var(--vermelho), #f87171); }
+    .card-revisao::before  { background: linear-gradient(90deg, var(--amarelo), #fcd34d); }
+    .card-nao-iniciado::before { background: linear-gradient(90deg, var(--cinza-400), var(--cinza-300)); }
+
+    .card-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .card-total     .card-icon { background: var(--roxo-100); }
+    .card-andamento .card-icon { background: #dbeafe; }
+    .card-concluido .card-icon { background: var(--verde-100); }
+    .card-atrasado  .card-icon { background: #fee2e2; }
+    .card-revisao   .card-icon { background: #fef3c7; }
+    .card-nao-iniciado .card-icon { background: var(--cinza-100); }
+
+    .card-valor {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .card-titulo {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       PAINEL DE PRIORIDADES
+    ============================================================ */
+    .prioridades-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .prioridades-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .prioridades-header h3 {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .prio-lista {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .prio-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .prio-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .prio-count {
+      font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 16px;
+    }
+
+    .prio-label { color: var(--text-muted); }
+
+    /* ============================================================
+       FORMULÁRIO
+    ============================================================ */
+    .form-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-sm);
+      display: none;
+    }
+
+    .form-section.aberto { display: block; animation: slideDown .25s ease; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .form-header h2 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .form-header h2 span {
+      color: var(--roxo-500);
+    }
+
+    .btn-fechar {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      color: var(--text-muted);
+      transition: all .2s;
+    }
+
+    .btn-fechar:hover { background: var(--cinza-100); color: var(--text); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+
+    label .req { color: var(--roxo-500); margin-left: 2px; }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--roxo-500);
+      box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-cancelar {
+      padding: 9px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-cancelar:hover { background: var(--cinza-100); color: var(--text); }
+
+    .btn-salvar {
+      padding: 9px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--roxo-600), var(--roxo-500));
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: var(--shadow-roxo);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-salvar:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,.35); }
+    .btn-salvar:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    /* ============================================================
+       FILTROS
+    ============================================================ */
+    .filtros-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .filtros-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+
+    .filtros-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .filtro-select {
+      padding: 7px 32px 7px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text);
+      background: var(--bg);
+      cursor: pointer;
+      min-width: 150px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      appearance: none;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .filtro-select:focus { border-color: var(--roxo-500); }
+
+    .btn-limpar {
+      padding: 7px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .btn-limpar:hover { background: var(--cinza-100); }
+
+    .filtro-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-left: auto;
+    }
+
+    .filtro-count strong { color: var(--roxo-500); font-weight: 700; }
+
+    /* ============================================================
+       TABELA
+    ============================================================ */
+    .tabela-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tabela-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tabela-header h2 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .tabela-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--cinza-100);
+      transition: background .15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--roxo-50); }
+
+    tbody td {
+      padding: 13px 16px;
+      font-size: 13.5px;
+      vertical-align: middle;
+    }
+
+    .td-id {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .td-nome {
+      font-weight: 600;
+      color: var(--text);
+      max-width: 220px;
+    }
+
+    .td-nome small {
+      display: block;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 220px;
+    }
+
+    .td-responsavel {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--roxo-400), var(--verde-500));
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .td-data {
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .td-data.atrasada { color: var(--vermelho); font-weight: 600; }
+
+    /* BADGES */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .7;
+    }
+
+    .badge-nao-iniciado { background: var(--cinza-100); color: var(--cinza-600); }
+    .badge-em-andamento { background: #dbeafe; color: #1d4ed8; }
+    .badge-em-revisao   { background: #fef3c7; color: #b45309; }
+    .badge-concluido    { background: var(--verde-100); color: var(--verde-600); }
+    .badge-atrasado     { background: #fee2e2; color: #dc2626; }
+
+    .badge-prio-baixa   { background: var(--cinza-100); color: var(--cinza-600); }
+    .badge-prio-media   { background: #dbeafe; color: #1d4ed8; }
+    .badge-prio-alta    { background: #fef3c7; color: #b45309; }
+    .badge-prio-critica { background: #fee2e2; color: #dc2626; }
+
+    /* AÇÕES */
+    .td-acoes {
+      display: flex;
+      gap: 4px;
+      justify-content: flex-end;
+    }
+
+    .btn-acao {
+      width: 30px; height: 30px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      transition: all .15s;
+    }
+
+    .btn-acao:hover { background: var(--cinza-100); color: var(--text); border-color: var(--cinza-300); }
+    .btn-acao.excluir:hover { background: #fee2e2; color: var(--vermelho); border-color: #fecaca; }
+    .btn-acao.editar:hover  { background: var(--roxo-100); color: var(--roxo-600); border-color: var(--roxo-300); }
+
+    /* ESTADO VAZIO */
+    .estado-vazio {
+      padding: 64px 24px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .estado-vazio .emoji { font-size: 48px; margin-bottom: 16px; }
+    .estado-vazio h3 { font-family: var(--font-display); font-size: 18px; margin-bottom: 8px; color: var(--text); }
+    .estado-vazio p  { font-size: 14px; }
+
+    /* LOADING */
+    .estado-loading {
+      padding: 64px 24px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--cinza-200);
+      border-top-color: var(--roxo-500);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ============================================================
+       MODAL DE EDIÇÃO
+    ============================================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,30,.55);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.aberto { display: flex; animation: fadeIn .2s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: scaleIn .2s ease;
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .modal-header h2 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: var(--cinza-900);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      box-shadow: var(--shadow-lg);
+      animation: toastIn .3s ease;
+      max-width: 320px;
+    }
+
+    .toast.sucesso { background: var(--verde-600); }
+    .toast.erro    { background: var(--vermelho); }
+    .toast.aviso   { background: var(--amarelo); color: var(--cinza-900); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateX(0); }
+      to   { opacity: 0; transform: translateX(20px); }
+    }
+
+    /* ============================================================
+       RESPONSIVO
+    ============================================================ */
+    @media (max-width: 768px) {
+      .header { padding: 0 16px; }
+      .main { padding: 20px 16px 48px; }
+      .logo-badge { display: none; }
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-section { padding: 20px 18px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .filtros-section { flex-direction: column; align-items: flex-start; }
+      .filtros-group { width: 100%; }
+      .filtro-select { flex: 1; min-width: 120px; }
+      .modal { padding: 24px 20px; }
+      .btn-novo .btn-text { display: none; }
+      table { font-size: 13px; }
+      thead th, tbody td { padding: 10px 12px; }
+    }
+
+    @media (max-width: 480px) {
+      .cards-grid { grid-template-columns: 1fr 1fr; }
+      .card-valor { font-size: 26px; }
+    }
+
+    /* ============================================================
+       UTILITÁRIOS
+    ============================================================ */
+    .hidden { display: none !important; }
+    .sr-only { position: absolute; width: 1px; height: 1px; clip: rect(0,0,0,0); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">📋</div>
+      <span class="logo-text">Gestão de Projetos</span>
+      <span class="logo-badge">v1.0</span>
+    </a>
+    <div class="header-actions">
+      <button class="btn-sync" id="btnSync" onclick="carregarProjetos()">
+        <span class="sync-icon">↻</span>
+        <span>Sincronizar</span>
+      </button>
+      <button class="btn-novo" onclick="abrirFormulario()">
+        <span>＋</span>
+        <span class="btn-text">Novo Projeto</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- INDICADORES -->
+  <p class="section-label">Visão Geral</p>
+  <div class="cards-grid">
+    <div class="card card-total">
+      <div class="card-icon">📁</div>
+      <div class="card-valor" id="ind-total">—</div>
+      <div class="card-titulo">Total de Projetos</div>
+    </div>
+    <div class="card card-andamento">
+      <div class="card-icon">⚡</div>
+      <div class="card-valor" id="ind-andamento">—</div>
+      <div class="card-titulo">Em Andamento</div>
+    </div>
+    <div class="card card-concluido">
+      <div class="card-icon">✅</div>
+      <div class="card-valor" id="ind-concluido">—</div>
+      <div class="card-titulo">Concluídos</div>
+    </div>
+    <div class="card card-atrasado">
+      <div class="card-icon">⚠️</div>
+      <div class="card-valor" id="ind-atrasado">—</div>
+      <div class="card-titulo">Atrasados</div>
+    </div>
+    <div class="card card-revisao">
+      <div class="card-icon">🔍</div>
+      <div class="card-valor" id="ind-revisao">—</div>
+      <div class="card-titulo">Em Revisão</div>
+    </div>
+    <div class="card card-nao-iniciado">
+      <div class="card-icon">🕐</div>
+      <div class="card-valor" id="ind-nao-iniciado">—</div>
+      <div class="card-titulo">Não Iniciados</div>
+    </div>
+  </div>
+
+  <!-- PRIORIDADES -->
+  <div class="prioridades-bar">
+    <div class="prioridades-header">
+      <h3>📊 Projetos por Prioridade</h3>
+    </div>
+    <div class="prio-lista" id="prio-lista">
+      <div class="prio-item"><span class="prio-dot" style="background:#6b7280"></span><span class="prio-count" id="prio-baixa">—</span><span class="prio-label">Baixa</span></div>
+      <div class="prio-item"><span class="prio-dot" style="background:#3b82f6"></span><span class="prio-count" id="prio-media">—</span><span class="prio-label">Média</span></div>
+      <div class="prio-item"><span class="prio-dot" style="background:#f59e0b"></span><span class="prio-count" id="prio-alta">—</span><span class="prio-label">Alta</span></div>
+      <div class="prio-item"><span class="prio-dot" style="background:#ef4444"></span><span class="prio-count" id="prio-critica">—</span><span class="prio-label">Crítica</span></div>
+    </div>
+  </div>
+
+  <!-- FORMULÁRIO DE CADASTRO -->
+  <div class="form-section" id="formSection">
+    <div class="form-header">
+      <h2 id="formTitulo">Novo <span>Projeto</span></h2>
+      <button class="btn-fechar" onclick="fecharFormulario()" title="Fechar">✕</button>
+    </div>
+    <form id="formProjeto" onsubmit="salvarProjeto(event)">
+      <input type="hidden" id="editId" />
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nome do Projeto <span class="req">*</span></label>
+          <input type="text" id="fNome" placeholder="Ex: Redesign do site" required />
+        </div>
+        <div class="form-group">
+          <label>Responsável <span class="req">*</span></label>
+          <input type="text" id="fResponsavel" placeholder="Ex: Ana Lima" required />
+        </div>
+        <div class="form-group">
+          <label>Data de Início <span class="req">*</span></label>
+          <input type="date" id="fDataInicio" required />
+        </div>
+        <div class="form-group">
+          <label>Data de Entrega <span class="req">*</span></label>
+          <input type="date" id="fDataEntrega" required />
+        </div>
+        <div class="form-group">
+          <label>Status <span class="req">*</span></label>
+          <select id="fStatus" required>
+            <option value="">Selecionar status</option>
+            <option value="Não iniciado">Não iniciado</option>
+            <option value="Em andamento">Em andamento</option>
+            <option value="Em revisão">Em revisão</option>
+            <option value="Concluído">Concluído</option>
+            <option value="Atrasado">Atrasado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Prioridade <span class="req">*</span></label>
+          <select id="fPrioridade" required>
+            <option value="">Selecionar prioridade</option>
+            <option value="Baixa">Baixa</option>
+            <option value="Média">Média</option>
+            <option value="Alta">Alta</option>
+            <option value="Crítica">Crítica</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Descrição</label>
+          <textarea id="fDescricao" placeholder="Descreva o objetivo do projeto (opcional)..."></textarea>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn-cancelar" onclick="fecharFormulario()">Cancelar</button>
+        <button type="submit" class="btn-salvar" id="btnSalvar">
+          <span id="btnSalvarIcon">💾</span>
+          <span id="btnSalvarTexto">Salvar Projeto</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filtros-section">
+    <span class="filtros-label">🔎 Filtros</span>
+    <div class="filtros-group">
+      <select class="filtro-select" id="filtroStatus" onchange="aplicarFiltros()">
+        <option value="">Todos os status</option>
+        <option value="Não iniciado">Não iniciado</option>
+        <option value="Em andamento">Em andamento</option>
+        <option value="Em revisão">Em revisão</option>
+        <option value="Concluído">Concluído</option>
+        <option value="Atrasado">Atrasado</option>
+      </select>
+      <select class="filtro-select" id="filtroPrioridade" onchange="aplicarFiltros()">
+        <option value="">Todas as prioridades</option>
+        <option value="Baixa">Baixa</option>
+        <option value="Média">Média</option>
+        <option value="Alta">Alta</option>
+        <option value="Crítica">Crítica</option>
+      </select>
+      <select class="filtro-select" id="filtroResponsavel" onchange="aplicarFiltros()">
+        <option value="">Todos os responsáveis</option>
+      </select>
+      <button class="btn-limpar" onclick="limparFiltros()">✕ Limpar</button>
+    </div>
+    <span class="filtro-count" id="filtroCount"></span>
+  </div>
+
+  <!-- TABELA -->
+  <div class="tabela-section">
+    <div class="tabela-header">
+      <h2>📋 Lista de Projetos</h2>
+    </div>
+    <div class="tabela-wrapper">
+      <table id="tabelaProjetos">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Projeto</th>
+            <th>Responsável</th>
+            <th>Entrega</th>
+            <th>Status</th>
+            <th>Prioridade</th>
+            <th style="text-align:right">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody">
+          <tr>
+            <td colspan="7">
+              <div class="estado-loading">
+                <div class="spinner"></div>
+                <p>Carregando projetos...</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL DE EDIÇÃO DE STATUS RÁPIDO -->
+<div class="modal-overlay" id="modalStatus">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h2>Alterar <span style="color:var(--roxo-500)">Status</span></h2>
+      <button class="btn-fechar" onclick="fecharModal('modalStatus')">✕</button>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px" id="modalStatusNome"></p>
+    <div style="display:flex;flex-direction:column;gap:8px" id="statusBotoes"></div>
+  </div>
+</div>
+
+<!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+<div class="modal-overlay" id="modalExcluir">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h2>⚠️ Confirmar <span style="color:var(--vermelho)">Exclusão</span></h2>
+      <button class="btn-fechar" onclick="fecharModal('modalExcluir')">✕</button>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:24px">
+      Tem certeza que deseja excluir o projeto <strong id="excluirNome"></strong>? Essa ação não pode ser desfeita.
+    </p>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn-cancelar" onclick="fecharModal('modalExcluir')">Cancelar</button>
+      <button class="btn-salvar" style="background:linear-gradient(135deg,#dc2626,#ef4444);box-shadow:0 4px 12px rgba(239,68,68,.3)" id="btnConfirmarExcluir">
+        🗑️ Excluir
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+  // ─── CONFIG ──────────────────────────────────────────────────
+  const API_URL = "https://script.google.com/macros/s/AKfycbxg0SbB9ZlPlqqmqFKe8FFCY_Bnr7LuaLzOQZZKKD8sA61Dwc6DMeMpqVDCeziV7gCP/exec";
+
+  // ─── ESTADO ──────────────────────────────────────────────────
+  let todosProjetos = [];
+  let projetosExibidos = [];
+
+  // ─── INICIALIZAÇÃO ───────────────────────────────────────────
+  document.addEventListener("DOMContentLoaded", () => {
+    carregarProjetos();
+    document.getElementById("fDataInicio").value = hoje();
+  });
+
+  // ─── API ─────────────────────────────────────────────────────
+  async function chamarAPI(payload) {
+    const resp = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "text/plain" }
+    });
+    const data = await resp.json();
+    if (data.erro) throw new Error(data.erro);
+    return data;
+  }
+
+  async function carregarProjetos() {
+    const btnSync = document.getElementById("btnSync");
+    btnSync.classList.add("loading");
+    try {
+      const data = await chamarAPI({ acao: "listar" });
+      todosProjetos = (data.projetos || []).map(p => ({
+        ...p,
+        status: verificarAtraso(p)
+      }));
+      atualizarFiltroResponsavel();
+      aplicarFiltros();
+      atualizarIndicadores(todosProjetos);
+    } catch (e) {
+      mostrarToast("Erro ao carregar projetos: " + e.message, "erro");
+      renderTabela([]);
+    } finally {
+      btnSync.classList.remove("loading");
+    }
+  }
+
+  // ─── VERIFICAR ATRASO ────────────────────────────────────────
+  function verificarAtraso(p) {
+    if (p.status === "Concluído") return p.status;
+    const hoje_ = new Date();
+    hoje_.setHours(0, 0, 0, 0);
+    const entrega = new Date(p.data_entrega);
+    if (!isNaN(entrega) && entrega < hoje_) return "Atrasado";
+    return p.status;
+  }
+
+  // ─── INDICADORES ─────────────────────────────────────────────
+  function atualizarIndicadores(lista) {
+    const total       = lista.length;
+    const andamento   = lista.filter(p => p.status === "Em andamento").length;
+    const concluido   = lista.filter(p => p.status === "Concluído").length;
+    const atrasado    = lista.filter(p => p.status === "Atrasado").length;
+    const revisao     = lista.filter(p => p.status === "Em revisão").length;
+    const naoIniciado = lista.filter(p => p.status === "Não iniciado").length;
+
+    animarNumero("ind-total",       total);
+    animarNumero("ind-andamento",   andamento);
+    animarNumero("ind-concluido",   concluido);
+    animarNumero("ind-atrasado",    atrasado);
+    animarNumero("ind-revisao",     revisao);
+    animarNumero("ind-nao-iniciado",naoIniciado);
+
+    animarNumero("prio-baixa",   lista.filter(p => p.prioridade === "Baixa").length);
+    animarNumero("prio-media",   lista.filter(p => p.prioridade === "Média").length);
+    animarNumero("prio-alta",    lista.filter(p => p.prioridade === "Alta").length);
+    animarNumero("prio-critica", lista.filter(p => p.prioridade === "Crítica").length);
+  }
+
+  function animarNumero(id, fim) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const inicio = parseInt(el.textContent) || 0;
+    const duracao = 400;
+    const t0 = performance.now();
+    const step = (t) => {
+      const prog = Math.min((t - t0) / duracao, 1);
+      el.textContent = Math.round(inicio + (fim - inicio) * easeOut(prog));
+      if (prog < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+  // ─── FILTROS ─────────────────────────────────────────────────
+  function atualizarFiltroResponsavel() {
+    const sel = document.getElementById("filtroResponsavel");
+    const atual = sel.value;
+    const responsaveis = [...new Set(todosProjetos.map(p => p.responsavel))].sort();
+    sel.innerHTML = '<option value="">Todos os responsáveis</option>';
+    responsaveis.forEach(r => {
+      const opt = document.createElement("option");
+      opt.value = r; opt.textContent = r;
+      if (r === atual) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function aplicarFiltros() {
+    const status     = document.getElementById("filtroStatus").value;
+    const prioridade = document.getElementById("filtroPrioridade").value;
+    const resp       = document.getElementById("filtroResponsavel").value;
+
+    projetosExibidos = todosProjetos.filter(p => {
+      if (status     && p.status     !== status)     return false;
+      if (prioridade && p.prioridade !== prioridade) return false;
+      if (resp       && p.responsavel !== resp)       return false;
+      return true;
+    });
+
+    renderTabela(projetosExibidos);
+    atualizarIndicadores(projetosExibidos);
+
+    const count = document.getElementById("filtroCount");
+    if (status || prioridade || resp) {
+      count.innerHTML = `Exibindo <strong>${projetosExibidos.length}</strong> de ${todosProjetos.length} projetos`;
+    } else {
+      count.innerHTML = "";
+    }
+  }
+
+  function limparFiltros() {
+    document.getElementById("filtroStatus").value = "";
+    document.getElementById("filtroPrioridade").value = "";
+    document.getElementById("filtroResponsavel").value = "";
+    aplicarFiltros();
+  }
+
+  // ─── RENDERIZAR TABELA ───────────────────────────────────────
+  function renderTabela(lista) {
+    const tbody = document.getElementById("tabelaBody");
+
+    if (lista.length === 0) {
+      tbody.innerHTML = `
+        <tr><td colspan="7">
+          <div class="estado-vazio">
+            <div class="emoji">📭</div>
+            <h3>Nenhum projeto encontrado</h3>
+            <p>Cadastre um novo projeto ou ajuste os filtros.</p>
+          </div>
+        </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = lista.map(p => {
+      const atrasada = p.status === "Atrasado";
+      return `
+        <tr>
+          <td class="td-id">${esc(p.id)}</td>
+          <td class="td-nome">
+            ${esc(p.nome)}
+            ${p.descricao ? `<small title="${esc(p.descricao)}">${esc(p.descricao)}</small>` : ""}
+          </td>
+          <td>
+            <div class="td-responsavel">
+              <div class="avatar">${iniciais(p.responsavel)}</div>
+              <span>${esc(p.responsavel)}</span>
+            </div>
+          </td>
+          <td class="td-data ${atrasada ? 'atrasada' : ''}">${formatarData(p.data_entrega)}${atrasada ? ' ⚠️' : ''}</td>
+          <td>${badgeStatus(p.status)}</td>
+          <td>${badgePrioridade(p.prioridade)}</td>
+          <td class="td-acoes">
+            <button class="btn-acao" title="Alterar status" onclick="abrirModalStatus('${esc(p.id)}','${esc(p.nome)}','${esc(p.status)}')">⚡</button>
+            <button class="btn-acao editar" title="Editar projeto" onclick="abrirEdicao('${esc(p.id)}')">✏️</button>
+            <button class="btn-acao excluir" title="Excluir projeto" onclick="confirmarExclusao('${esc(p.id)}','${esc(p.nome)}')">🗑️</button>
+          </td>
+        </tr>`;
+    }).join("");
+  }
+
+  // ─── BADGES ──────────────────────────────────────────────────
+  function badgeStatus(s) {
+    const mapa = {
+      "Não iniciado": "nao-iniciado",
+      "Em andamento": "em-andamento",
+      "Em revisão":   "em-revisao",
+      "Concluído":    "concluido",
+      "Atrasado":     "atrasado"
+    };
+    const cls = mapa[s] || "nao-iniciado";
+    return `<span class="badge badge-${cls}">${esc(s)}</span>`;
+  }
+
+  function badgePrioridade(p) {
+    const mapa = { "Baixa": "baixa", "Média": "media", "Alta": "alta", "Crítica": "critica" };
+    const cls = mapa[p] || "baixa";
+    return `<span class="badge badge-prio-${cls}">${esc(p)}</span>`;
+  }
+
+  // ─── FORMULÁRIO CADASTRO ─────────────────────────────────────
+  function abrirFormulario() {
+    document.getElementById("formProjeto").reset();
+    document.getElementById("editId").value = "";
+    document.getElementById("fDataInicio").value = hoje();
+    document.getElementById("formTitulo").innerHTML = 'Novo <span>Projeto</span>';
+    document.getElementById("btnSalvarTexto").textContent = "Salvar Projeto";
+    document.getElementById("formSection").classList.add("aberto");
+    document.getElementById("formSection").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function fecharFormulario() {
+    document.getElementById("formSection").classList.remove("aberto");
+  }
+
+  async function salvarProjeto(e) {
+    e.preventDefault();
+    const id = document.getElementById("editId").value;
+    const dados = {
+      nome:         document.getElementById("fNome").value,
+      responsavel:  document.getElementById("fResponsavel").value,
+      data_inicio:  document.getElementById("fDataInicio").value,
+      data_entrega: document.getElementById("fDataEntrega").value,
+      status:       document.getElementById("fStatus").value,
+      prioridade:   document.getElementById("fPrioridade").value,
+      descricao:    document.getElementById("fDescricao").value
+    };
+
+    setBtnLoading(true);
+    try {
+      if (id) {
+        await chamarAPI({ acao: "editar", dados: { id, ...dados } });
+        mostrarToast("Projeto atualizado com sucesso!", "sucesso");
+      } else {
+        await chamarAPI({ acao: "criar", dados });
+        mostrarToast("Projeto cadastrado com sucesso!", "sucesso");
+      }
+      fecharFormulario();
+      await carregarProjetos();
+    } catch (err) {
+      mostrarToast("Erro: " + err.message, "erro");
+    } finally {
+      setBtnLoading(false);
+    }
+  }
+
+  function setBtnLoading(loading) {
+    const btn = document.getElementById("btnSalvar");
+    btn.disabled = loading;
+    document.getElementById("btnSalvarIcon").textContent = loading ? "⏳" : "💾";
+    document.getElementById("btnSalvarTexto").textContent = loading ? "Salvando..." : (document.getElementById("editId").value ? "Atualizar" : "Salvar Projeto");
+  }
+
+  // ─── EDIÇÃO ──────────────────────────────────────────────────
+  function abrirEdicao(id) {
+    const p = todosProjetos.find(x => x.id === id);
+    if (!p) return;
+
+    document.getElementById("editId").value = p.id;
+    document.getElementById("fNome").value        = p.nome;
+    document.getElementById("fResponsavel").value = p.responsavel;
+    document.getElementById("fDataInicio").value  = isoData(p.data_inicio);
+    document.getElementById("fDataEntrega").value = isoData(p.data_entrega);
+    document.getElementById("fStatus").value      = p.status;
+    document.getElementById("fPrioridade").value  = p.prioridade;
+    document.getElementById("fDescricao").value   = p.descricao || "";
+    document.getElementById("formTitulo").innerHTML = 'Editar <span>Projeto</span>';
+    document.getElementById("btnSalvarTexto").textContent = "Atualizar";
+    document.getElementById("formSection").classList.add("aberto");
+    document.getElementById("formSection").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ─── STATUS RÁPIDO ───────────────────────────────────────────
+  function abrirModalStatus(id, nome, statusAtual) {
+    document.getElementById("modalStatusNome").textContent = "Projeto: " + nome;
+    const statuses = ["Não iniciado", "Em andamento", "Em revisão", "Concluído", "Atrasado"];
+    const cores = {
+      "Não iniciado": "#6b7280",
+      "Em andamento": "#3b82f6",
+      "Em revisão":   "#f59e0b",
+      "Concluído":    "#10b981",
+      "Atrasado":     "#ef4444"
+    };
+    const cont = document.getElementById("statusBotoes");
+    cont.innerHTML = statuses.map(s => `
+      <button onclick="alterarStatus('${id}','${s}')"
+        style="padding:12px 16px;border:2px solid ${s===statusAtual?cores[s]:'#e4e2f0'};
+               border-radius:10px;background:${s===statusAtual?cores[s]+'15':'transparent'};
+               color:${s===statusAtual?cores[s]:colorTextMuted()};font-family:var(--font-body);
+               font-size:14px;font-weight:${s===statusAtual?'700':'500'};
+               cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;
+               transition:all .15s">
+        <span style="width:10px;height:10px;border-radius:50%;background:${cores[s]};flex-shrink:0"></span>
+        ${s}${s===statusAtual?' ✓':''}
+      </button>`).join("");
+    document.getElementById("modalStatus").classList.add("aberto");
+  }
+
+  function colorTextMuted() { return "#6b6b8a"; }
+
+  async function alterarStatus(id, novoStatus) {
+    fecharModal("modalStatus");
+    try {
+      await chamarAPI({ acao: "editar", dados: { id, status: novoStatus } });
+      mostrarToast("Status atualizado!", "sucesso");
+      await carregarProjetos();
+    } catch (err) {
+      mostrarToast("Erro: " + err.message, "erro");
+    }
+  }
+
+  // ─── EXCLUSÃO ────────────────────────────────────────────────
+  let idParaExcluir = null;
+
+  function confirmarExclusao(id, nome) {
+    idParaExcluir = id;
+    document.getElementById("excluirNome").textContent = nome;
+    document.getElementById("btnConfirmarExcluir").onclick = executarExclusao;
+    document.getElementById("modalExcluir").classList.add("aberto");
+  }
+
+  async function executarExclusao() {
+    fecharModal("modalExcluir");
+    try {
+      await chamarAPI({ acao: "excluir", id: idParaExcluir });
+      mostrarToast("Projeto excluído.", "sucesso");
+      await carregarProjetos();
+    } catch (err) {
+      mostrarToast("Erro: " + err.message, "erro");
+    }
+  }
+
+  // ─── MODAIS ──────────────────────────────────────────────────
+  function fecharModal(id) {
+    document.getElementById(id).classList.remove("aberto");
+  }
+
+  document.querySelectorAll(".modal-overlay").forEach(overlay => {
+    overlay.addEventListener("click", e => {
+      if (e.target === overlay) overlay.classList.remove("aberto");
+    });
+  });
+
+  // ─── TOASTS ──────────────────────────────────────────────────
+  function mostrarToast(msg, tipo = "info") {
+    const cont = document.getElementById("toastContainer");
+    const icones = { sucesso: "✅", erro: "❌", aviso: "⚠️", info: "ℹ️" };
+    const toast = document.createElement("div");
+    toast.className = `toast ${tipo}`;
+    toast.innerHTML = `<span>${icones[tipo] || "ℹ️"}</span><span>${msg}</span>`;
+    cont.appendChild(toast);
+    setTimeout(() => {
+      toast.style.animation = "toastOut .3s ease forwards";
+      setTimeout(() => toast.remove(), 300);
+    }, 3500);
+  }
+
+  // ─── UTILITÁRIOS ─────────────────────────────────────────────
+  function hoje() {
+    return new Date().toISOString().split("T")[0];
+  }
+
+  function isoData(val) {
+    if (!val) return "";
+    if (typeof val === "string" && val.includes("T")) return val.split("T")[0];
+    if (typeof val === "string") return val;
+    return "";
+  }
+
+  function formatarData(val) {
+    const d = new Date(val);
+    if (isNaN(d)) return val || "—";
+    return d.toLocaleDateString("pt-BR", { timeZone: "UTC", day: "2-digit", month: "2-digit", year: "numeric" });
+  }
+
+  function iniciais(nome) {
+    if (!nome) return "?";
+    const partes = nome.trim().split(" ");
+    if (partes.length === 1) return partes[0].charAt(0).toUpperCase();
+    return (partes[0].charAt(0) + partes[partes.length - 1].charAt(0)).toUpperCase();
+  }
+
+  function esc(str) {
+    if (!str) return "";
+    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+</script>
+
+</body>
+</html>
